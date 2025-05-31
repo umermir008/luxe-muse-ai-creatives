@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 20 0% 13%; /* Dark Charcoal #222222 */
+    --foreground: 0 0% 88%; /* Light Gray #E0E0E0 for text on dark background */
+    --card: 0 0% 16%; /* Slightly lighter than background for cards */
+    --card-foreground: 0 0% 88%;
+    --popover: 0 0% 13%;
+    --popover-foreground: 0 0% 88%;
+    --primary: 45 65% 52%; /* Deep Gold #D4AF37 */
+    --primary-foreground: 0 0% 10%; /* Dark text for gold buttons */
+    --secondary: 0 0% 20%; /* Slightly lighter dark shade */
+    --secondary-foreground: 0 0% 88%;
+    --muted: 0 0% 25%;
+    --muted-foreground: 0 0% 60%;
+    --accent: 0 0% 75%; /* Muted Silver #C0C0C0 */
+    --accent-foreground: 0 0% 10%; /* Dark text for silver accents */
+    --destructive: 0 72% 51%; /* Standard destructive red */
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 25%;
+    --input: 0 0% 20%;
+    --ring: 45 65% 52%; /* Deep Gold for focus rings */
+    --chart-1: 45 65% 52%;
+    --chart-2: 0 0% 75%;
+    --chart-3: 40 70% 60%;
+    --chart-4: 30 75% 55%;
+    --chart-5: 50 60% 50%;
+    --radius: 0.5rem;
+    --sidebar-background: 0 0% 10%; /* Even darker for sidebar */
+    --sidebar-foreground: 0 0% 80%;
+    --sidebar-primary: 45 65% 52%;
+    --sidebar-primary-foreground: 0 0% 10%;
+    --sidebar-accent: 0 0% 15%;
+    --sidebar-accent-foreground: 45 65% 52%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 45 65% 52%;
+  }
+
+  .dark {
+    /* Dark theme is default, so .dark vars can mirror :root or be adjusted if needed */
+    --background: 20 0% 13%;
+    --foreground: 0 0% 88%;
+    --card: 0 0% 16%;
+    --card-foreground: 0 0% 88%;
+    --popover: 0 0% 13%;
+    --popover-foreground: 0 0% 88%;
+    --primary: 45 65% 52%;
+    --primary-foreground: 0 0% 10%;
+    --secondary: 0 0% 20%;
+    --secondary-foreground: 0 0% 88%;
+    --muted: 0 0% 25%;
+    --muted-foreground: 0 0% 60%;
+    --accent: 0 0% 75%;
+    --accent-foreground: 0 0% 10%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 25%;
+    --input: 0 0% 20%;
+    --ring: 45 65% 52%;
+    --sidebar-background: 0 0% 10%;
+    --sidebar-foreground: 0 0% 80%;
+    --sidebar-primary: 45 65% 52%;
+    --sidebar-primary-foreground: 0 0% 10%;
+    --sidebar-accent: 0 0% 15%;
+    --sidebar-accent-foreground: 45 65% 52%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 45 65% 52%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    @apply font-body;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-headline;
+  }
+}
