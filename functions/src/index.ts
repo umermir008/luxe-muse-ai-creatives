@@ -1,8 +1,11 @@
-
 import * as logger from "firebase-functions/logger";
 import { HttpsError, onCall } from "firebase-functions/v2/https";
 import * as admin from "firebase-admin";
-import { AxiosResponse } from 'axios'; // Example for typings if using axios
+// Removed: import { AxiosResponse } from 'axios'; // No longer needed if axios isn't actively used for typings here
+
+// Import necessary modules for Google Generative AI / Genkit
+// import { GoogleGenerativeAI } from '@google/generative-ai'; // Make sure you have this installed: npm install @google/generative-ai // Commented out
+// import * as functions from 'firebase-functions'; // Required to access functions.config() // Commented out
 
 // Initialize Firebase Admin SDK
 // This needs to be done only once per functions deployment.
@@ -10,13 +13,6 @@ import { AxiosResponse } from 'axios'; // Example for typings if using axios
 if (admin.apps.length === 0) {
   admin.initializeApp();
 }
-
-// Access your AI API Key from environment variables
-// For Firebase v2 functions, you'd typically set this up during deployment
-// or use .env files with `dotenv` if running locally for emulation.
-// Example: const AI_API_KEY = process.env.AI_API_KEY;
-// For older v1 functions.config(): const AI_API_KEY = functions.config().ai?.key;
-
 
 // --- Helper function to fetch an image from a URL and return as Buffer ---
 // This is an example. Your AI API might return a base64 string or a direct buffer.
@@ -38,6 +34,13 @@ async function fetchImageAsBuffer(imageUrl: string): Promise<Buffer> {
   );
 }
 
+// Initialize the Google Generative AI client using the API key
+// This is where you use the key set via `firebase functions:config:set gemini.key="..."`
+// const genAI = new GoogleGenerativeAI(functions.config().gemini.key); // Commented out to resolve TS6133 error
+// const model = genAI.getGenerativeModel({ model: "gemini-pro" }); // This was already commented out
+                                                              // Note: Gemini-Pro is a text model. For image generation,
+                                                              // you typically need a separate image generation API (like DALL-E, Stable Diffusion, or specific Google image models).
+                                                              // This code currently has placeholders for *external* AI Image APIs.
 
 export const generateAiImage = onCall(async (request) => {
   logger.info("generateAiImage function called with data:", request.data);
@@ -70,8 +73,9 @@ export const generateAiImage = onCall(async (request) => {
     case "1:1": default: width = 512; height = 512; break;
   }
 
-  const negativePrompt = request.data.negativePrompt;
-  // You might also receive stylePreset, creativity, detailLevel, colorPalette etc. from request.data
+  // Removed: const negativePrompt = request.data.negativePrompt; // This was unused
+  // If your actual AI Image API (e.g., DALL-E, not Gemini Pro) supports negative prompts,
+  // you would uncomment and use this variable in your API call.
 
   logger.info(`Processing AI image generation for user ${userId}, prompt: "${prompt}"`);
 
@@ -81,14 +85,23 @@ export const generateAiImage = onCall(async (request) => {
   // --- Step 1: Call your chosen AI Image Generation API ---
   try {
     logger.info("Calling external AI Image Generation API...");
-    // const aiApiUrl = "YOUR_AI_API_ENDPOINT";
-    // const aiApiKey = process.env.AI_API_KEY; // Ensure this is configured in your environment
+
+    // IMPORTANT: The code below is currently a placeholder for an *external* AI Image Generation API.
+    // The `GoogleGenerativeAI` client initialized above (genAI) is for Gemini text models.
+    // If you intend to use Google's image generation (e.g., through Imagen or a vision model's capabilities),
+    // you'd need to adapt this section. For now, it continues to use the placeholder.
+
+    // const aiApiUrl = "YOUR_AI_API_ENDPOINT"; // e.g., for DALL-E, Stable Diffusion, etc.
+    // const aiApiKey = functions.config().gemini.key; // Reusing the same key, but your image API might need a different one!
 
     // if (!aiApiKey) {
-    //   logger.error("AI_API_KEY is not set in environment variables.");
+    //   logger.error("AI_API_KEY (Gemini Key) is not set in environment variables.");
     //   throw new HttpsError("internal", "AI service configuration error.");
     // }
 
+    // This section is commented out because it's currently a placeholder for *external* APIs.
+    // If you uncomment this, ensure you have the `axios` or `node-fetch` library installed in `functions/package.json`
+    // and replace placeholders with your actual AI Image API endpoint and request format.
     // Example with a hypothetical API that returns a direct image URL to download
     // const aiApiResponse = await fetch(aiApiUrl, {
     //   method: 'POST',
@@ -98,7 +111,7 @@ export const generateAiImage = onCall(async (request) => {
     //   },
     //   body: JSON.stringify({
     //     prompt: prompt,
-    //     negative_prompt: negativePrompt,
+    //     // negative_prompt: negativePrompt, // Only if your chosen image API supports it
     //     aspect_ratio: aspectRatio,
     //     // ... other parameters your AI API expects
     //   }),
@@ -114,12 +127,13 @@ export const generateAiImage = onCall(async (request) => {
     // const temporaryImageUrlFromAi = responseData.imageUrl; // Or handle base64, etc.
     // logger.info("AI API response received. Image URL:", temporaryImageUrlFromAi);
 
-    // // If API returns an image URL, fetch it as a buffer
+    // If API returns an image URL, fetch it as a buffer
     // generatedImageBuffer = await fetchImageAsBuffer(temporaryImageUrlFromAi);
     // contentType = responseData.contentType || 'image/png'; // Get content type if provided
 
-    // --- Placeholder for actual AI API call ---
-    logger.warn("Using placeholder for AI API call. Implement actual API integration.");
+
+    // --- Current Placeholder for actual AI API call ---
+    logger.warn("Using placeholder for AI API call. Implement actual API integration for image generation.");
     await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API delay
     // Simulate receiving a buffer (e.g., a small transparent PNG)
     generatedImageBuffer = await fetchImageAsBuffer("placeholder_url_not_actually_used");
@@ -184,5 +198,3 @@ export const generateAiImage = onCall(async (request) => {
     throw new HttpsError("internal", "Failed to store generated image.");
   }
 });
-
-    
